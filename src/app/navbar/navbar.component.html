@@ -1,0 +1,35 @@
+<div class="pos-f-t fixed-top">
+
+    <nav class="navbar  navbar-dark bg-dark d-flex ">
+        <div class="px-1">
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="px-1 ">
+            <a class="navbar-brand" routerLink=""><img src="../../favicon.ico" width="30" height="30"
+                    class="d-inline-block align-top" alt="">&nbsp;<span class="font-weight-normal">Ncr Panel</span>
+            </a>
+        </div>
+        <div class="mr-auto">
+           
+        </div>
+        <!-- #generic_table -->
+        <div class="ml-auto" *ngIf = 'true || isUserLoggedIn()'>
+            <button class="btn btn-danger my-2 my-sm-0" (click)="logOut();">Logout</button>
+        </div>
+
+    </nav>
+    <div class="collapse " id="navbarToggleExternalContent">
+        <div class="bg-dark p-2 d-inline-block" data-toggle="collapse" data-target="#navbarToggleExternalContent"
+            aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+
+            <div class="text-light">                
+                <!-- <div class="dropdown-divider"></div> -->
+                <a class="dropdown-item nav-link text-light" routerLink="/panel-dashboard" routerLinkActive="active">Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>

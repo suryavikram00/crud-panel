@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  // apiEndpoint: window.location.protocol + '//' + window.location.hostname + ':8086/nmncr'
+  apiEndpoint: window.location.protocol + '//' + window.location.hostname + ':8081/v1'
 };
 
 /*

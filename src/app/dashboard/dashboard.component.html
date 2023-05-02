@@ -1,0 +1,27 @@
+<div class="container shadow p-3 bg-white rounded">
+    <div>
+        <h2 class="text-center">Dashboard</h2>
+    </div>
+    <div class="row m-1">
+        <div class="px-1">
+            <select class="form-select btn btn-light border border-primary" aria-label="Default select example"
+                [(ngModel)]="selectedTableApiName" (change)="onChange()">
+                <option value="" selected>Select Table</option>
+                <option *ngFor="let eachMetaData of tableMetaData" [value]="eachMetaData.tableApiName">
+                    {{eachMetaData.tableviewName}}
+                </option>
+            </select>
+        </div>
+        <div class="px-1">
+            <button class="btn btn-primary" type="button" id="show-table-button" (click)="showTableBtnClick()"
+                [disabled]="selectedTableMetaData == undefined">
+                Submit
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <app-generic-table></app-generic-table>
+    </div>
+
+</div>
