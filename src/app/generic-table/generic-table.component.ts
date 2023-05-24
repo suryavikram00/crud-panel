@@ -44,13 +44,13 @@ export class GenericTableComponent {
       return;
     }
     this.displayedColumns = Object.keys(this.paginatedData.content[0]);
-    if (this.searchObject == undefined) {
+    // if (this.searchObject == undefined) {
       this.searchObject = Object.assign({}, this.paginatedData.content[0]);
       // initialize the search object values to empty
       for (let index = 0; index < this.displayedColumns.length; index++) {
         this.searchObject[this.displayedColumns[index]] = "";
       }
-    }
+    // }
   }
 
   trackByFn(index: any, item: any) {
