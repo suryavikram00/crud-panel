@@ -1,13 +1,13 @@
 <div class="pos-f-t fixed-top">
 
     <nav class="navbar  navbar-dark bg-dark d-flex ">
-        <!-- <div class="px-1">
+        <div class="px-1">
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-        </div> -->
+        </div>
         <div class="px-1 ">
             <a class="navbar-brand" routerLink="/panel-dashboard"><span class="font-weight-normal">Ncr Panel</span>
             </a>
@@ -16,7 +16,7 @@
            
         </div>
         <!-- #generic_table -->
-        <div class="ml-auto" *ngIf = 'true || isUserLoggedIn()'>
+        <div class="ml-auto" *ngIf = 'isUserLoggedIn()'>
             <button class="btn btn-danger my-2 my-sm-0" (click)="logOut();">Logout</button>
         </div>
 
@@ -27,7 +27,7 @@
 
             <div class="text-light">                
                 <!-- <div class="dropdown-divider"></div> -->
-                <a class="dropdown-item nav-link text-light" routerLink="/panel-dashboard" routerLinkActive="active">Dashboard</a>
+                <a class="dropdown-item nav-link text-light" routerLink="/panel-dashboard" routerLinkActive="active">Nutty Crunch</a>
             </div>
         </div>
     </div>

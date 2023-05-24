@@ -29,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GenericTableComponent } from './generic-table/generic-table.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -38,7 +39,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HealthCheckComponent,
     
     GenericTableComponent,
-    DashboardComponent
+    DashboardComponent,
+    LoginComponent,
+    AppComponent,
+    NavbarComponent,
+    HealthCheckComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
