@@ -17,35 +17,62 @@ export class ApiService {
     constructor(private http: HttpClient, private toastr: ToastrService) {
     }
 
-    getPage(url: any, pageNumber: number, pageSize: number, isPaged: boolean) {        
-        return this.http.get<PaginatedData<any>>(`${this.apiEndPoint}${url}/paginate?isPaged=${isPaged}&page=${pageNumber}&size=${pageSize}`);
+    getPage(url: any, pageNumber: number, pageSize: number, isPaged: boolean) {
+        return this.http.get<PaginatedData<any>>(`${this.apiEndPoint}${url}/paginate?isPaged=${isPaged}&page=${pageNumber}&size=${pageSize}`)
+            .pipe(
+                map((res: any) => {
+                    const resData: { error: any, data: any } = res;
+                    if (res.status == 'FAILURE') {
+                        this.toastr.open('error', `Failure`, 'Something went wrong!');
+                        return throwError(res.status)
+                    }
+                    return resData;
+                }),
+                catchError((error: any) => {
+                    this.toastr.open('error', `ERROR-${error.status}`, error.error.error);
+                    return throwError(error)
+                })
+            )
     }
 
     objToSearchParams(obj: any): HttpParams {
         const param = new HttpParams();
         for (var key in obj) {
             if (obj.hasOwnProperty(key))
-            param.set(key, obj[key]);
+                param.set(key, obj[key]);
         }
         return param;
     }
 
     getSearchResult(url: any, object: any) {
-        
-        let attributeNameArray = Object.keys(object);        
+
+        let attributeNameArray = Object.keys(object);
         // const param =  this.objToSearchParams(object);
         const param = new HttpParams();
-        let queryParam : string = '?';
-        for (let index = 0; index < attributeNameArray.length; index++) {            
+        let queryParam: string = '?';
+        for (let index = 0; index < attributeNameArray.length; index++) {
             param.set(attributeNameArray[index], object[attributeNameArray[index]]);
-            let value : string = object[attributeNameArray[index]] != '' ? object[attributeNameArray[index]] : null;            
-            if(object[attributeNameArray[index]] != ''){
+            let value: string = object[attributeNameArray[index]] != '' ? object[attributeNameArray[index]] : null;
+            if (object[attributeNameArray[index]] != '') {
                 queryParam = queryParam + attributeNameArray[index] + "=" + object[attributeNameArray[index]] + "&";
-            }            
+            }
         }
         return this.http.get<any>(`${this.apiEndPoint}${url}/search` + queryParam, {
             params: param
-        });
+        }).pipe(
+            map((res: any) => {
+                const resData: { error: any, data: any } = res;
+                if (res.status == 'FAILURE') {
+                    this.toastr.open('error', `Failure`, 'Something went wrong!');
+                    return throwError(res.status)
+                }
+                return resData;
+            }),
+            catchError((error: any) => {
+                this.toastr.open('error', `ERROR-${error.status}`, error.error.error);
+                return throwError(error)
+            })
+        )
     }
 
     httpPost(url: any, reqData: any) {

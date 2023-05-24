@@ -16,18 +16,18 @@ import { EMPTY } from 'rxjs';
                 tableviewName: 'NCR SUPPLIER LOGIN DETAILS',
                 tableApiName: 'supplier-login-detail',
                 serverPaginationEnabled: true
-            },
-            {
-                tableName: 'ncr_proposed_po',
-                tableviewName: 'NCR PROPOSED PURCHASE ORDER',
-                tableApiName: 'ppo',
-                serverPaginationEnabled: true
-            },
-            {
-                tableName: 'ncr_po',
-                tableviewName: 'NCR PURCHASE ORDER',
-                tableApiName: 'po',
-                serverPaginationEnabled: false
+            // },
+            // {
+            //     tableName: 'ncr_proposed_po',
+            //     tableviewName: 'NCR PROPOSED PURCHASE ORDER',
+            //     tableApiName: 'ppo',
+            //     serverPaginationEnabled: true
+            // },
+            // {
+            //     tableName: 'ncr_po',
+            //     tableviewName: 'NCR PURCHASE ORDER',
+            //     tableApiName: 'po',
+            //     serverPaginationEnabled: false
             }
         ];
     }

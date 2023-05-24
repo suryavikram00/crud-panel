@@ -64,8 +64,8 @@ export class DashboardComponent implements OnInit {
     let isPaged: boolean = this.selectedTableMetaData.serverPaginationEnabled;
     this.api.getPage("/" + this.selectedTableMetaData.tableApiName, 0, 5, this.selectedTableMetaData.serverPaginationEnabled)
       .subscribe((res: any) => {
-        result = res;
-        this.genericTableComponent.paginatedData = res;   
+        result = res.pageData;
+        this.genericTableComponent.paginatedData = res.pageData;   
         this.genericTableComponent.loadDataSource();
       })
     return result;
