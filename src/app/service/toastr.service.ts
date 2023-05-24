@@ -1,4 +1,4 @@
-import { Injectable, Component, Inject } from '@angular/core';
+import { Injectable, Component, Inject, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar, MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class ToastrService {
       panelClass: ['snackAlert', `accel-bg-${type === 'error' ? 'danger' : type}`, 'text-white', 'py-2'],
       horizontalPosition: 'end',
       verticalPosition: 'top',
-      duration: type !== 'warning' ? 3000 : 100000
+      duration: type !== 'warning' ? 3000000 : 1000000
     });
   };
 
@@ -21,7 +21,7 @@ export class ToastrService {
 
 @Component({
   selector: 'snack-bar-component',
-  template: `<div class="d-flex flex-row">
+  template: `<div class="d-flex flex-row ">
                 <div class="col-1 px-1 d-flex align-items-center">
                   <i style="font-size: 1.5em;" attr.class=icon-{{headIcon}}></i>
                 </div>
@@ -35,8 +35,11 @@ export class ToastrService {
                   </font>
                 </div>
             </div>`,
-  styles: [],
-  providers: [ToastrService]
+  styles: [`.mat-snack-bar-container {
+    margin: 60px 40px !important;
+} `],
+  providers: [ToastrService],
+  encapsulation: ViewEncapsulation.None
 })
 export class SnackBarToastrComponent {
   title: any = 'Title';

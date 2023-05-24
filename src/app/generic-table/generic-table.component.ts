@@ -38,6 +38,8 @@ export class GenericTableComponent {
   }
 
   private loadTableHeader() {
+    console.log(this.paginatedData);
+    console.log(this.paginatedData.content);
     if (this.paginatedData.content.length == 0) {
       return;
     }
@@ -73,7 +75,7 @@ export class GenericTableComponent {
       this.tableMetaData.serverPaginationEnabled = false;
 
       this.api.getSearchResult("/" + this.tableMetaData.tableApiName, this.searchObject).subscribe((data: any) => {
-        this.paginatedData = data;
+        this.paginatedData = data.pageData;
         this.loadDataSource();
       });
     } else {
@@ -104,8 +106,8 @@ export class GenericTableComponent {
   }
 
   private getData(pageNumber: number, pageSize: number) {
-    this.api.getPage("/" + this.tableMetaData.tableApiName, pageNumber, pageSize, this.tableMetaData.serverPaginationEnabled).subscribe((data: PaginatedData<any>) => {
-      this.paginatedData = data;
+    this.api.getPage("/" + this.tableMetaData.tableApiName, pageNumber, pageSize, this.tableMetaData.serverPaginationEnabled).subscribe((data: any) => {
+      this.paginatedData = data.pageData;
       if (this.tableMetaData.serverPaginationEnabled) {
         this.loadTableData();
       } else {
