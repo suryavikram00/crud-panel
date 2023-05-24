@@ -28,6 +28,12 @@ import { EMPTY } from 'rxjs';
                 tableviewName: 'NCR PURCHASE ORDER',
                 tableApiName: 'po',
                 serverPaginationEnabled: false
+            },
+            {
+                tableName: 'ncr_zipcode',
+                tableviewName: 'NCR ZIP CODE',
+                tableApiName: 'zipcode',
+                serverPaginationEnabled: true
             }
         ];
     }

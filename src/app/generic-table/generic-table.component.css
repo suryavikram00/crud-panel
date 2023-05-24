@@ -1,3 +1,38 @@
 table {
-    width: 100%;
+  width: 100%;
+}
+.table-container {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 1px solid #aeb3ba;
+}
+.table-container .mat-table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  display: table;
+  border-collapse: collapse;
+  margin: 0px;
+}
+.table-container .mat-row,
+.mat-header-row {
+    display: table-row;
+}
+
+.table-header {
+  padding: 20px !important;
+}
+
+.table-container
+.mat-cell,
+.mat-header-cell {
+    word-wrap: initial;
+    display: table-cell;
+    padding: 0px 5px;
+    line-break: unset;
+    width: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
 }

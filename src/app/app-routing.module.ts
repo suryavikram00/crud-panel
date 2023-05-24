@@ -6,14 +6,19 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 const routes: Routes = [
-  
+
+  {
+    path: '',
+    redirectTo: 'panel-dashboard',
+    pathMatch: 'full'
+  },
   {
     path: 'status',
     component: HealthCheckComponent
   },
   {
     path: 'panel-dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
   },
   {
     path: 'generic-table',
