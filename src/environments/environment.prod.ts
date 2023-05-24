@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiEndpoint: 'nmncr'
+  apiEndpoint: 'v1'
 };
