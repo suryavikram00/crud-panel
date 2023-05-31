@@ -22,7 +22,7 @@ export class GenericTableComponent {
 
   searchObject: any;
   dataSource!: MatTableDataSource<any>;
-  displayedColumns!: string[];
+  displayedColumns: string[] = [];
   // orginalContentArray : any[] = [];
 
   @ViewChild(MatPaginator)
@@ -44,13 +44,20 @@ export class GenericTableComponent {
     if (this.paginatedData.content.length == 0) {
       return;
     }
-    this.displayedColumns = Object.keys(this.paginatedData.content[0]);
+    this.displayedColumns = [];
+    this.displayedColumns = Object.keys(this.paginatedData.content[0]);    
+    console.log('valuye :: ' + this.tableMetaData.editEnabled);
+    // if (this.tableMetaData.editEnabled) {
+    //   // this.displayedColumns.concat('actions');
+    //   this.displayedColumns.push('actions');
+    // }
+    console.log('columns :: ' + this.displayedColumns);
     // if (this.searchObject == undefined) {
-      this.searchObject = Object.assign({}, this.paginatedData.content[0]);
-      // initialize the search object values to empty
-      for (let index = 0; index < this.displayedColumns.length; index++) {
-        this.searchObject[this.displayedColumns[index]] = "";
-      }
+    this.searchObject = Object.assign({}, this.paginatedData.content[0]);
+    // initialize the search object values to empty
+    for (let index = 0; index < this.displayedColumns.length; index++) {
+      this.searchObject[this.displayedColumns[index]] = "";
+    }
     // }
   }
 
@@ -96,8 +103,8 @@ export class GenericTableComponent {
     this.dataSource.paginator.pageIndex = 0;
   }
 
-  private loadTableData() {   
-    let clonedContentArray : any[] = [];
+  private loadTableData() {
+    let clonedContentArray: any[] = [];
     this.paginatedData.content.forEach(item => {
       item.editMode = false;
       clonedContentArray.push(Object.assign({}, item));
@@ -139,7 +146,7 @@ export class GenericTableComponent {
   toggleEdit(record: any): void {
     record.editMode = !record.editMode;
   }
-  
+
   saveChanges(record: any): void {
     console.log(record);
     record.editMode = false;
@@ -148,11 +155,11 @@ export class GenericTableComponent {
       console.log(data);
     });;
   }
-  
-  cancelEdit(record: any): void {    
-    const originalRecord = this.paginatedData.content.find(item => item.id === record.id);        
-    record.editMode = false;    
-    Object.assign(record, originalRecord);        
+
+  cancelEdit(record: any): void {
+    const originalRecord = this.paginatedData.content.find(item => item.id === record.id);
+    record.editMode = false;
+    Object.assign(record, originalRecord);
   }
 
 }

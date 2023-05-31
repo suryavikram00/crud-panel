@@ -3,4 +3,5 @@ export interface TableMetaData{
     tableviewName : string;
     tableApiName : string;
     serverPaginationEnabled : boolean;    
+    editEnabled : boolean;
 }

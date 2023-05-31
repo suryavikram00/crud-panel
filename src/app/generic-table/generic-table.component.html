@@ -60,9 +60,15 @@
                     </ng-template>
                 </td>
             </ng-container>
+            <div *ngIf="tableMetaData?.editEnabled">
+                <tr mat-header-row *matHeaderRowDef="displayedColumns.concat('actions')"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns.concat('actions');"></tr>
+            </div>
+            <div *ngIf="!tableMetaData?.editEnabled">
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </div>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns.concat('actions')"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns.concat('actions');"></tr>
         </table>
     </div>
     <mat-paginator [length]="paginatedData?.totalElements" (page)="onPageChange($event)"

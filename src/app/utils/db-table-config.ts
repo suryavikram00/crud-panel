@@ -15,13 +15,15 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_supplier_login_details',
                 tableviewName: 'NCR SUPPLIER LOGIN DETAILS',
                 tableApiName: 'supplier-login-detail',
-                serverPaginationEnabled: true
+                serverPaginationEnabled: true,
+                editEnabled : true
             },
             {
                 tableName: 'ncr_zipcode',
                 tableviewName: 'NCR ZIP CODE',
                 tableApiName: 'zipcode',
-                serverPaginationEnabled: true
+                serverPaginationEnabled: true,
+                editEnabled : false
             }
         ];
     }
