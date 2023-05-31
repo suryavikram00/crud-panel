@@ -23,6 +23,7 @@ export class GenericTableComponent {
   searchObject: any;
   dataSource!: MatTableDataSource<any>;
   displayedColumns!: string[];
+  // orginalContentArray : any[] = [];
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -95,8 +96,15 @@ export class GenericTableComponent {
     this.dataSource.paginator.pageIndex = 0;
   }
 
-  private loadTableData() {
-    this.dataSource = new MatTableDataSource<any>(this.paginatedData.content);
+  private loadTableData() {   
+    let clonedContentArray : any[] = [];
+    this.paginatedData.content.forEach(item => {
+      item.editMode = false;
+      clonedContentArray.push(Object.assign({}, item));
+    });
+    // clone the list
+    // let clonedPaginatedData = Object.assign([], this.paginatedData.content);
+    this.dataSource = new MatTableDataSource<any>(clonedContentArray);
   }
 
   url: string = "/";
@@ -128,6 +136,25 @@ export class GenericTableComponent {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  toggleEdit(record: any): void {
+    record.editMode = !record.editMode;
+  }
+  
+  saveChanges(record: any): void {
+    console.log(record);
+    record.editMode = false;
+    // Perform the save operation
+    this.api.httpPut("/" + this.tableMetaData.tableApiName, record).subscribe((data: any) => {
+      console.log(data);
+    });;
+  }
+  
+  cancelEdit(record: any): void {    
+    const originalRecord = this.paginatedData.content.find(item => item.id === record.id);        
+    record.editMode = false;    
+    Object.assign(record, originalRecord);        
   }
 
 }

@@ -36,3 +36,7 @@ table {
     overflow: hidden;
     vertical-align: middle;
 }
+
+.btn {
+  /* padding: 2px 8px;   */
+}
