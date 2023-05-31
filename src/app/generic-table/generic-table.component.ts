@@ -102,8 +102,6 @@ export class GenericTableComponent {
       item.editMode = false;
       clonedContentArray.push(Object.assign({}, item));
     });
-    // clone the list
-    // let clonedPaginatedData = Object.assign([], this.paginatedData.content);
     this.dataSource = new MatTableDataSource<any>(clonedContentArray);
   }
 
