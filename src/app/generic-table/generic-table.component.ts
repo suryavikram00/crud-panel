@@ -27,8 +27,8 @@ export class GenericTableComponent {
   createObject: any;
   dataSource!: MatTableDataSource<any>;
   displayedColumns: string[] = [];
-  currentPageNo : number = 0;
-  currentPageSize : number = 5;
+  currentPageNo: number = 0;
+  currentPageSize: number = 5;
   // orginalContentArray : any[] = [];
 
   @ViewChild(MatPaginator)
@@ -72,11 +72,11 @@ export class GenericTableComponent {
     return index;
   }
 
-  export(){
+  export() {
     let result: any[] = [];
     this.api.export("/" + this.tableMetaData.tableApiName, this.paginatedData.content)
       .subscribe((res: any) => {
-        this.saveFile(res, this.tableMetaData.tableApiName + '.csv');        
+        this.saveFile(res, this.tableMetaData.tableApiName + '.csv');
       })
     return result;
   }
@@ -126,7 +126,7 @@ export class GenericTableComponent {
     }
   }
 
-  private restoreDefaultPageCount(){
+  private restoreDefaultPageCount() {
     this.currentPageNo = 0;
     this.currentPageSize = 5;
   }
@@ -183,11 +183,15 @@ export class GenericTableComponent {
   }
 
   saveChanges(record: any): void {
-    console.log(record);
-    record.editMode = false;
+    console.log(record);    
     // Perform the save operation
     this.api.httpPut("/" + this.tableMetaData.tableApiName, record).subscribe((data: any) => {
       console.log(data);
+      if (data.status === 'FAILURE') {        
+        record.editMode = true;
+      } else {
+        record.editMode = false;
+      }
     });
   }
 
@@ -210,7 +214,7 @@ export class GenericTableComponent {
     // Perform the save operation
     this.api.httpPost("/" + this.tableMetaData.tableApiName, this.createObject).subscribe((data: any) => {
       console.log(data);
-      if(data.status === 'FAILURE'){
+      if (data.status === 'FAILURE') {
         return;
       }
       // reload the paginated from the configuration

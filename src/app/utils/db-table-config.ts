@@ -42,7 +42,7 @@ import { EMPTY } from 'rxjs';
                     column: ["apiStatus", "availableStatus"]
                 }
 
-            }
+            }            
         ];
     }
 

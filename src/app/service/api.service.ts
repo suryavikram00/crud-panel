@@ -122,7 +122,7 @@ export class ApiService {
                     const resData: { error: any, data: any } = res;
                     if (res.status == 'FAILURE') {
                         this.toastr.open('error', `Failure`, res.message);
-                        return throwError(res.status)
+                        return resData;
                     }
                     return resData;
                 }),
