@@ -41,11 +41,26 @@ import { EMPTY } from 'rxjs';
                     enabled: false,
                     column: ["apiStatus", "availableStatus"]
                 }
-            }, 
+            },
             {
                 tableName: 'ncr_supplier_master',
                 tableviewName: 'NCR SUPPLIER MASTER',
                 tableApiName: 'supplier-master',
+                serverPaginationEnabled: false,
+                exportEnabled: true,
+                edit: {
+                    enabled: false,
+                    column: []
+                },
+                create: {
+                    enabled: false,
+                    column: []
+                }
+            },
+            {
+                tableName: 'ncr_fc_master',
+                tableviewName: 'NCR FC MASTER',
+                tableApiName: 'fc-master',
                 serverPaginationEnabled: false,
                 exportEnabled: true,
                 edit: {
