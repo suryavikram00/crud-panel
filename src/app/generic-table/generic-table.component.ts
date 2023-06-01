@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ElementRef } from '@angular/core';
 import { ApiService } from '../service/api.service';
+import { saveAs } from 'file-saver';
 
 import 'datatables.net';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -17,12 +18,17 @@ import { DbTableConfig } from '../utils/db-table-config';
 })
 export class GenericTableComponent {
 
+  @ViewChild('closebutton') closebutton: any;
+
   paginatedData!: PaginatedData<any>;
   tableMetaData!: TableMetaData;
 
   searchObject: any;
+  createObject: any;
   dataSource!: MatTableDataSource<any>;
   displayedColumns: string[] = [];
+  currentPageNo : number = 0;
+  currentPageSize : number = 5;
   // orginalContentArray : any[] = [];
 
   @ViewChild(MatPaginator)
@@ -45,8 +51,7 @@ export class GenericTableComponent {
       return;
     }
     this.displayedColumns = [];
-    this.displayedColumns = Object.keys(this.paginatedData.content[0]);    
-    console.log('valuye :: ' + this.tableMetaData.editEnabled);
+    this.displayedColumns = Object.keys(this.paginatedData.content[0]);
     // if (this.tableMetaData.editEnabled) {
     //   // this.displayedColumns.concat('actions');
     //   this.displayedColumns.push('actions');
@@ -54,15 +59,38 @@ export class GenericTableComponent {
     console.log('columns :: ' + this.displayedColumns);
     // if (this.searchObject == undefined) {
     this.searchObject = Object.assign({}, this.paginatedData.content[0]);
+    this.createObject = Object.assign({}, this.paginatedData.content[0]);
     // initialize the search object values to empty
     for (let index = 0; index < this.displayedColumns.length; index++) {
       this.searchObject[this.displayedColumns[index]] = "";
+      this.createObject[this.displayedColumns[index]] = "";
     }
     // }
   }
 
   trackByFn(index: any, item: any) {
     return index;
+  }
+
+  export(){
+    let result: any[] = [];
+    this.api.export("/" + this.tableMetaData.tableApiName, this.paginatedData.content)
+      .subscribe((res: any) => {
+        this.saveFile(res, this.tableMetaData.tableApiName + '.csv');        
+      })
+    return result;
+  }
+
+  saveFile(data: any, filename: string): void {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 
   searchBtnClick() {
@@ -90,12 +118,17 @@ export class GenericTableComponent {
       // reload the paginated from the configuration
       this.tableMetaData = this.dbTableConfig.getTableMetaDataByApi(this.tableMetaData.tableApiName);
       // if no value is being inputed then call the submit event function
-      this.getData(0, 5);
+      // this.restoreDefaultPageCount();
+      this.getData(this.currentPageNo, this.currentPageSize);
       if (this.dataSource != null && this.dataSource.paginator != null) {
         this.dataSource.paginator.pageIndex = 0;
       }
-
     }
+  }
+
+  private restoreDefaultPageCount(){
+    this.currentPageNo = 0;
+    this.currentPageSize = 5;
   }
 
   private loadTablePaginator() {
@@ -119,6 +152,8 @@ export class GenericTableComponent {
   }
 
   private getData(pageNumber: number, pageSize: number) {
+    this.currentPageNo = pageNumber;
+    this.currentPageSize = pageSize
     this.api.getPage("/" + this.tableMetaData.tableApiName, pageNumber, pageSize, this.tableMetaData.serverPaginationEnabled).subscribe((data: any) => {
       this.paginatedData = data.pageData;
       if (this.tableMetaData.serverPaginationEnabled) {
@@ -153,7 +188,43 @@ export class GenericTableComponent {
     // Perform the save operation
     this.api.httpPut("/" + this.tableMetaData.tableApiName, record).subscribe((data: any) => {
       console.log(data);
-    });;
+    });
+  }
+
+  createBtnClick(): void {
+    console.log(this.createObject);
+
+    let attributeNameArray = Object.keys(this.createObject);
+
+    let isAllFieldEntered: boolean = true;
+    for (let index = 0; index < attributeNameArray.length; index++) {
+      if (this.createObject[attributeNameArray[index]] === '') {
+        isAllFieldEntered = false;
+      }
+    }
+    // if value are being inputed then call search results
+    // if (isAllFieldEntered) {
+    // update paginated data to false
+    this.tableMetaData.serverPaginationEnabled = false;
+
+    // Perform the save operation
+    this.api.httpPost("/" + this.tableMetaData.tableApiName, this.createObject).subscribe((data: any) => {
+      console.log(data);
+      if(data.status === 'FAILURE'){
+        return;
+      }
+      // reload the paginated from the configuration
+      this.tableMetaData = this.dbTableConfig.getTableMetaDataByApi(this.tableMetaData.tableApiName);
+      // if no value is being inputed then call the submit event function
+      this.getData(this.currentPageNo, this.currentPageSize);
+      if (this.dataSource != null && this.dataSource.paginator != null) {
+        this.dataSource.paginator.pageIndex = 0;
+      }
+      this.closeModal();
+    });
+    // } else {
+    // alert('Please enter values in all the fields!');
+    // }
   }
 
   cancelEdit(record: any): void {
@@ -161,5 +232,24 @@ export class GenericTableComponent {
     record.editMode = false;
     Object.assign(record, originalRecord);
   }
+
+  // Close the modal
+  closeModal() {
+    this.closebutton.nativeElement.click();
+  }
+
+  openCreateModalBtnClick(): void {
+    this.createObject = Object.assign({}, this.paginatedData.content[0]);
+    // initialize the search object values to empty
+    for (let index = 0; index < this.displayedColumns.length; index++) {
+      this.createObject[this.displayedColumns[index]] = "";
+    }
+  }
+
+  public isEditable(key: any): boolean {
+    return key !== 'editMode' && this.tableMetaData.create.column.includes(key);
+  }
+
+
 
 }

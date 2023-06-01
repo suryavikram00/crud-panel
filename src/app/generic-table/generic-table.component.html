@@ -1,14 +1,16 @@
 <div class="container p-1">
     <div *ngIf="paginatedData  != undefined">
         <div class="row py-3 m-1 d-block text-center">
-            <h4 class="text-center">TABLE : {{tableMetaData.tableviewName}}</h4>
-        </div>
-        <!-- <div class="row py-3 m-1">
-            <div *ngFor="let item of tableMetaData | keyvalue">
-                <div class="col"><b>{{item.key}}</b></div>
-                <div class="col">{{item.value}}</div>
+            <div>
+                <h4 class="text-center">TABLE : {{tableMetaData.tableviewName}} &nbsp;
+                    <button *ngIf="tableMetaData?.create?.enabled" type="button" class="btn btn-primary"
+                        data-toggle="modal" data-target="#createModal" (click)="openCreateModalBtnClick()">
+                        Create
+                    </button>
+                </h4>
+                <!-- Button trigger modal -->
             </div>
-        </div> -->
+        </div>
         <div class="row pt-3 m-1">
             <div *ngFor="let item of searchObject | keyvalue  let index = index; trackBy: trackByFn">
                 <div class="col"><b>{{item.key}}</b></div>
@@ -32,6 +34,10 @@
                 </mat-form-field>
             </div>
         </div>
+        <div *ngIf = "tableMetaData.exportEnabled" class="row py-1 m-1 text-elft d-block">
+            <button type="button" class="btn btn-primary" [innerHTML]="tableMetaData.serverPaginationEnabled ? 'Export Current Page' : 'Export Data'" (click)="export()">                            
+            </button>
+        </div>
     </div>
 
     <div class="table-container">
@@ -42,9 +48,10 @@
             <ng-container *ngFor='let column of displayedColumns;' matColumnDef='{{column}}'>
                 <th mat-header-cell *matHeaderCellDef class="table-header"> {{column | uppercase}}</th>
                 <td mat-cell *matCellDef="let element" class="">
-                    <span *ngIf="!element.editMode">{{ element[column] | json }}</span>
-                    <input *ngIf="element.editMode" [(ngModel)]="element[column]">
-                    <!-- {{element[column] | json}}  -->
+                    <span *ngIf="!element.editMode || !tableMetaData.edit.column.includes(column)">{{ element[column]
+                        | json }}</span>
+                    <input *ngIf="element.editMode && tableMetaData.edit.column.includes(column)"
+                        [(ngModel)]="element[column]" class="form-control">
                 </td>
             </ng-container>
             <!-- Add a new column for the Edit button -->
@@ -60,18 +67,52 @@
                     </ng-template>
                 </td>
             </ng-container>
-            <div *ngIf="tableMetaData?.editEnabled">
+            <div *ngIf="tableMetaData?.edit?.enabled">
                 <tr mat-header-row *matHeaderRowDef="displayedColumns.concat('actions')"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns.concat('actions');"></tr>
             </div>
-            <div *ngIf="!tableMetaData?.editEnabled">
+            <div *ngIf="!tableMetaData?.edit?.enabled">
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </div>
-
         </table>
     </div>
     <mat-paginator [length]="paginatedData?.totalElements" (page)="onPageChange($event)"
         [pageSizeOptions]="[5, 10, 20,50]" showFirstLastButtons aria-label="Select page of periodic elements">
-    </mat-paginator>
+    </mat-paginator>    
+
+    <!-- Modal -->
+    <div class="modal fade" id="createModal" #createModalRef tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create Modal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row pt-3 m-1">
+                        <div *ngFor="let item of createObject | keyvalue  let index = index; trackBy: trackByFn">
+                            <div *ngIf="isEditable(item.key)">
+                                <div class="col"><b>{{item.key}}</b></div>
+                                <div class="col">
+                                    <mat-form-field>
+                                        <input class="d-none" #myselect value="{{item.key}}" />
+                                        <input matInput placeholder="{{item.key}}"
+                                            [(ngModel)]="createObject[myselect.value]">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" #closebutton data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="createBtnClick()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -17,6 +17,28 @@ export class ApiService {
     constructor(private http: HttpClient, private toastr: ToastrService) {
     }
 
+
+    export(url: any, list : any) {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });        
+        const options = { headers: headers, responseType: 'text' as 'json' };
+    
+        return this.http.post<PaginatedData<any>>(`${this.apiEndPoint}${url}/export`, list, options)
+            .pipe(
+                map((res: any) => {
+                    const resData: { error: any, data: any } = res;
+                    if (res.status == 'FAILURE') {
+                        this.toastr.open('error', `Failure`, 'Something went wrong!');
+                        return throwError(res.status)
+                    }
+                    return resData;
+                }),
+                catchError((error: any) => {
+                    this.toastr.open('error', `ERROR-${error.status}`, error.error.error);
+                    return throwError(error)
+                })
+            )
+    }
+
     getPage(url: any, pageNumber: number, pageSize: number, isPaged: boolean) {
         return this.http.get<PaginatedData<any>>(`${this.apiEndPoint}${url}/paginate?isPaged=${isPaged}&page=${pageNumber}&size=${pageSize}`)
             .pipe(
@@ -80,6 +102,10 @@ export class ApiService {
             .pipe(
                 map((res: any) => {
                     const resData: { error: any, data: any } = res;
+                    if (res.status == 'FAILURE') {
+                        this.toastr.open('error', `Failure`, res.message);
+                        // return throwError(res.status)
+                    }
                     return resData;
                 }),
                 catchError((error: any) => {
@@ -94,6 +120,10 @@ export class ApiService {
             .pipe(
                 map((res: any) => {
                     const resData: { error: any, data: any } = res;
+                    if (res.status == 'FAILURE') {
+                        this.toastr.open('error', `Failure`, res.message);
+                        return throwError(res.status)
+                    }
                     return resData;
                 }),
                 catchError((error: any) => {
