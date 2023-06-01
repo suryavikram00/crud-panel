@@ -6,6 +6,8 @@ import { map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Router, ParamMap } from '@angular/router';
 import { throwError } from 'rxjs';
+import { LoadingService } from '../service/loading.service';
+import { finalize } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +15,17 @@ import { throwError } from 'rxjs';
 export class TokenIntercepterService {
   constructor(public injector: Injector,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private loadingService: LoadingService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    this.loadingService.show(); // Show progress bar when request starts
     let localStorageUtils = this.injector.get(LocalStorageService);
     let jwtToken = localStorageUtils.getJwtToken();
     if (jwtToken == null) {
       jwtToken = "dummytoken";
     }
-    console.log("hey there :: " + JSON.stringify(request));
+    console.log(JSON.stringify(request));
     request = request.clone({
       headers: new HttpHeaders({
         token: jwtToken
@@ -36,7 +40,13 @@ export class TokenIntercepterService {
         } else console.info('event =', event, ';');
         return event;
       })).pipe(
-        catchError(this.handleError<any>('addHero')));
+        catchError(this.handleError<any>('addHero')))
+      .pipe(
+        finalize(() => {
+          this.loadingService.hide(); // Hide progress bar when request completes
+        })
+      )
+      ;
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
@@ -48,14 +58,14 @@ export class TokenIntercepterService {
         if (error.status === 403) {
           console.info('err.error.403 =', error.error.error, ';');
           console.info('err.error =', error, ';');
-          error.error.error="User is not authorized to perform this action";
+          error.error.error = "User is not authorized to perform this action";
         }
         else if (error.status === 401) {
           console.info('err.error.401 =', error.error.error, ';');
           let localStorageUtils = this.injector.get(LocalStorageService);
           localStorageUtils.clearJwtToken();
           this.router.navigate(['login']);
-        }        
+        }
         return throwError(error);
       }
 

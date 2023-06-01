@@ -31,7 +31,7 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_zipcode',
                 tableviewName: 'NCR ZIP CODE',
                 tableApiName: 'zipcode',
-                serverPaginationEnabled: true,
+                serverPaginationEnabled: false,
                 exportEnabled: true,
                 edit: {
                     enabled: false,

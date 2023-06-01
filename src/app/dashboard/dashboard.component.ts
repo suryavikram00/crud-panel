@@ -30,7 +30,6 @@ export class DashboardComponent implements OnInit {
 
   showTableBtnClick() {
     this.canLoadGenericTable = true;
-    // this.genericTableComponent.tableName = this.selectedTable;
     this.genericTableComponent.tableMetaData = this.selectedTableMetaData;    
     console.log(this.selectedTableMetaData.toString());        
     this.loadJsonListFromApi();

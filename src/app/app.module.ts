@@ -30,6 +30,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { GenericTableComponent } from './generic-table/generic-table.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { LoginComponent } from './login/login.component';
     BrowserModule,
     BrowserAnimationsModule,
     // NgbModule,
+    MatProgressBarModule,
     AppRoutingModule,
     MatToolbarModule,
     MatPaginatorModule,
