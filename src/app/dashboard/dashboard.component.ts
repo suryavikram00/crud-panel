@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit {
       .subscribe((res: any) => {
         result = res.pageData;
         this.genericTableComponent.paginatedData = res.pageData;   
+        this.genericTableComponent.loadContentUsingFilter = false;
         this.genericTableComponent.loadDataSource();
       })
     return result;

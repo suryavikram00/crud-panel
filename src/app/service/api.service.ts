@@ -66,7 +66,7 @@ export class ApiService {
         return param;
     }
 
-    getSearchResult(url: any, object: any) {
+    getSearchResult(url: any, object: any, isPaged: boolean, pageNumber : number, pageSize : number) {
 
         let attributeNameArray = Object.keys(object);
         // const param =  this.objToSearchParams(object);
@@ -79,6 +79,7 @@ export class ApiService {
                 queryParam = queryParam + attributeNameArray[index] + "=" + object[attributeNameArray[index]] + "&";
             }
         }
+        queryParam = queryParam + `isPaged=${isPaged}&page=${pageNumber}&size=${pageSize}`;
         return this.http.get<any>(`${this.apiEndPoint}${url}/search` + queryParam, {
             params: param
         }).pipe(
@@ -86,7 +87,7 @@ export class ApiService {
                 const resData: { error: any, data: any } = res;
                 if (res.status == 'FAILURE') {
                     this.toastr.open('error', `Failure`, 'Something went wrong!');
-                    return throwError(res.status)
+                    return resData
                 }
                 return resData;
             }),

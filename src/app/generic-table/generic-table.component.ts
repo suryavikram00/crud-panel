@@ -29,6 +29,7 @@ export class GenericTableComponent {
   displayedColumns: string[] = [];
   currentPageNo: number = 0;
   currentPageSize: number = 5;
+  loadContentUsingFilter: boolean = false;
   // orginalContentArray : any[] = [];
 
   @ViewChild(MatPaginator)
@@ -38,7 +39,7 @@ export class GenericTableComponent {
     console.log(' in view ' + this.paginatedData);
   }
 
-  public loadDataSource() {
+  public loadDataSource() {    
     this.loadTableHeader();
     this.loadTableData();
     this.loadTablePaginator();
@@ -52,20 +53,17 @@ export class GenericTableComponent {
     }
     this.displayedColumns = [];
     this.displayedColumns = Object.keys(this.paginatedData.content[0]);
-    // if (this.tableMetaData.editEnabled) {
-    //   // this.displayedColumns.concat('actions');
-    //   this.displayedColumns.push('actions');
-    // }
+
     console.log('columns :: ' + this.displayedColumns);
-    // if (this.searchObject == undefined) {
-    this.searchObject = Object.assign({}, this.paginatedData.content[0]);
-    this.createObject = Object.assign({}, this.paginatedData.content[0]);
-    // initialize the search object values to empty
-    for (let index = 0; index < this.displayedColumns.length; index++) {
-      this.searchObject[this.displayedColumns[index]] = "";
-      this.createObject[this.displayedColumns[index]] = "";
+    if (!this.loadContentUsingFilter) {
+      this.searchObject = Object.assign({}, this.paginatedData.content[0]);
+      this.createObject = Object.assign({}, this.paginatedData.content[0]);
+      // initialize the search object values to empty
+      for (let index = 0; index < this.displayedColumns.length; index++) {
+        this.searchObject[this.displayedColumns[index]] = "";
+        this.createObject[this.displayedColumns[index]] = "";
+      }
     }
-    // }
   }
 
   trackByFn(index: any, item: any) {
@@ -95,7 +93,7 @@ export class GenericTableComponent {
 
   searchBtnClick() {
     console.log(this.searchObject);
-
+    this.restoreDefaultPageCount();
     let attributeNameArray = Object.keys(this.searchObject);
 
     let isSearchValueEntered: boolean = false;
@@ -107,18 +105,22 @@ export class GenericTableComponent {
     }
     // if value are being inputed then call search results
     if (isSearchValueEntered) {
+      this.loadContentUsingFilter = true;
       // update paginated data to false
-      this.tableMetaData.serverPaginationEnabled = false;
+      // this.tableMetaData.serverPaginationEnabled = false;
 
-      this.api.getSearchResult("/" + this.tableMetaData.tableApiName, this.searchObject).subscribe((data: any) => {
-        this.paginatedData = data.pageData;
-        this.loadDataSource();
-      });
+      this.api.getSearchResult("/" + this.tableMetaData.tableApiName,
+        this.searchObject,
+        this.tableMetaData.serverPaginationEnabled,
+        this.currentPageNo, this.currentPageSize).subscribe((data: any) => {
+          this.paginatedData = data.pageData;
+          this.loadDataSource();
+        });
     } else {
+      this.loadContentUsingFilter = false;
       // reload the paginated from the configuration
       this.tableMetaData = this.dbTableConfig.getTableMetaDataByApi(this.tableMetaData.tableApiName);
-      // if no value is being inputed then call the submit event function
-      // this.restoreDefaultPageCount();
+      // if no value is being inputed then call the submit event function      
       this.getData(this.currentPageNo, this.currentPageSize);
       if (this.dataSource != null && this.dataSource.paginator != null) {
         this.dataSource.paginator.pageIndex = 0;
@@ -153,7 +155,7 @@ export class GenericTableComponent {
 
   private getData(pageNumber: number, pageSize: number) {
     this.currentPageNo = pageNumber;
-    this.currentPageSize = pageSize
+    this.currentPageSize = pageSize;
     this.api.getPage("/" + this.tableMetaData.tableApiName, pageNumber, pageSize, this.tableMetaData.serverPaginationEnabled).subscribe((data: any) => {
       this.paginatedData = data.pageData;
       if (this.tableMetaData.serverPaginationEnabled) {
@@ -169,9 +171,21 @@ export class GenericTableComponent {
     // Do something with the page event, such as updating your data source
     // based on the new page index and page size
     console.log(event);
-    if (this.tableMetaData.serverPaginationEnabled) {
+    if (this.tableMetaData.serverPaginationEnabled && !this.loadContentUsingFilter) {
       this.getData(event.pageIndex, event.pageSize);
+    } else if (this.tableMetaData.serverPaginationEnabled && this.loadContentUsingFilter) {
+      this.currentPageNo = event.pageIndex;
+      this.currentPageSize = event.pageSize;
+      this.api.getSearchResult("/" + this.tableMetaData.tableApiName,
+        this.searchObject,
+        this.tableMetaData.serverPaginationEnabled,
+        event.pageIndex, event.pageSize).subscribe((data: any) => {
+          this.paginatedData = data.pageData;
+          this.loadTableData();
+        });
     }
+
+
   }
 
   applyFilter(filterValue: string) {
@@ -183,11 +197,11 @@ export class GenericTableComponent {
   }
 
   saveChanges(record: any): void {
-    console.log(record);    
+    console.log(record);
     // Perform the save operation
     this.api.httpPut("/" + this.tableMetaData.tableApiName, record).subscribe((data: any) => {
       console.log(data);
-      if (data.status === 'FAILURE') {        
+      if (data.status === 'FAILURE') {
         record.editMode = true;
       } else {
         record.editMode = false;
@@ -206,8 +220,6 @@ export class GenericTableComponent {
         isAllFieldEntered = false;
       }
     }
-    // if value are being inputed then call search results
-    // if (isAllFieldEntered) {
     // update paginated data to false
     this.tableMetaData.serverPaginationEnabled = false;
 

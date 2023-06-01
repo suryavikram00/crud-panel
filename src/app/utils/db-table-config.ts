@@ -15,11 +15,11 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_supplier_login_details',
                 tableviewName: 'NCR SUPPLIER LOGIN DETAILS',
                 tableApiName: 'supplier-login-detail',
-                serverPaginationEnabled: false,                
+                serverPaginationEnabled: true,                
                 exportEnabled: true,
                 edit: {
                     enabled: true,
-                    column: ["fcCode", "accessToken"]
+                    column: ["fcCode", "accessToken", "userId"]
                 }, 
                 create: {
                     enabled: true,
@@ -38,7 +38,7 @@ import { EMPTY } from 'rxjs';
                     column: ["apiStatus", "availableStatus"]
                 },
                 create: {
-                    enabled: true,
+                    enabled: false,
                     column: ["apiStatus", "availableStatus"]
                 }
 
