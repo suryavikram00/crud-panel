@@ -15,12 +15,12 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_supplier_login_details',
                 tableviewName: 'NCR SUPPLIER LOGIN DETAILS',
                 tableApiName: 'supplier-login-detail',
-                serverPaginationEnabled: true,                
+                serverPaginationEnabled: true,
                 exportEnabled: true,
                 edit: {
                     enabled: true,
                     column: ["fcCode", "accessToken", "userId"]
-                }, 
+                },
                 create: {
                     enabled: true,
                     column: ["accessToken", "externalCustomerCode", "fcCode", "password", "supplierCode", "userId"]
@@ -31,8 +31,8 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_zipcode',
                 tableviewName: 'NCR ZIP CODE',
                 tableApiName: 'zipcode',
-                serverPaginationEnabled: true, 
-                exportEnabled: true,               
+                serverPaginationEnabled: true,
+                exportEnabled: true,
                 edit: {
                     enabled: false,
                     column: ["apiStatus", "availableStatus"]
@@ -41,8 +41,22 @@ import { EMPTY } from 'rxjs';
                     enabled: false,
                     column: ["apiStatus", "availableStatus"]
                 }
-
-            }            
+            }, 
+            {
+                tableName: 'ncr_supplier_master',
+                tableviewName: 'NCR SUPPLIER MASTER',
+                tableApiName: 'supplier-master',
+                serverPaginationEnabled: false,
+                exportEnabled: true,
+                edit: {
+                    enabled: false,
+                    column: []
+                },
+                create: {
+                    enabled: false,
+                    column: []
+                }
+            }
         ];
     }
 
