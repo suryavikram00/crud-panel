@@ -266,6 +266,10 @@ export class GenericTableComponent {
     return key !== 'editMode' && this.tableMetaData.create.column.includes(key);
   }
 
+  public canShowSearchField(key : any) : boolean {
+    return this.tableMetaData.searchColumn.includes(key);
+  }
+
 
 
 }

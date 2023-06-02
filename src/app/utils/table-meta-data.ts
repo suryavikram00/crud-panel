@@ -3,6 +3,7 @@ export interface TableMetaData {
     tableviewName: string;
     tableApiName: string;
     serverPaginationEnabled: boolean;
+    searchColumn : String[],
     exportEnabled: boolean,
     edit: ActionMetaData,
     create: ActionMetaData

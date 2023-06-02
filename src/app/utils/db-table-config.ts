@@ -16,6 +16,7 @@ import { EMPTY } from 'rxjs';
                 tableviewName: 'NCR SUPPLIER LOGIN DETAILS',
                 tableApiName: 'supplier-login-detail',
                 serverPaginationEnabled: true,
+                searchColumn : [],
                 exportEnabled: true,
                 edit: {
                     enabled: true,
@@ -31,7 +32,8 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_zipcode',
                 tableviewName: 'NCR ZIP CODE',
                 tableApiName: 'zipcode',
-                serverPaginationEnabled: false,
+                serverPaginationEnabled: true,
+                searchColumn : [],
                 exportEnabled: true,
                 edit: {
                     enabled: false,
@@ -47,6 +49,7 @@ import { EMPTY } from 'rxjs';
                 tableviewName: 'NCR SUPPLIER MASTER',
                 tableApiName: 'supplier-master',
                 serverPaginationEnabled: true,
+                searchColumn : ["active", "autoSendEmail", "autoEmailOtcGeneratePo", "autoPo", "emailId", "name", "supplierCode"],
                 exportEnabled: true,
                 edit: {
                     enabled: false,
@@ -62,6 +65,7 @@ import { EMPTY } from 'rxjs';
                 tableviewName: 'NCR FC MASTER',
                 tableApiName: 'fc-master',
                 serverPaginationEnabled: false,
+                searchColumn : [],
                 exportEnabled: true,
                 edit: {
                     enabled: false,

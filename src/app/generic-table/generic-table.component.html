@@ -13,13 +13,16 @@
         </div>
         <div class="row pt-3 m-1">
             <div *ngFor="let item of searchObject | keyvalue  let index = index; trackBy: trackByFn">
-                <div class="col"><b>{{item.key}}</b></div>
-                <div class="col">
-                    <mat-form-field>
-                        <input class="d-none" #myselect value="{{item.key}}" />
-                        <input matInput placeholder="{{item.key}}" [(ngModel)]="searchObject[myselect.value]">
-                    </mat-form-field>
+                <div *ngIf = "tableMetaData.searchColumn.length == 0 || canShowSearchField(item.key)">
+                    <!-- <div *ngIf = "tableMetaData.edit.column.includes(column)"></div> -->
+                    <div class="col"><b>{{item.key}}</b></div>
+                    <div class="col">
+                        <mat-form-field>
+                            <input class="d-none" #myselect value="{{item.key}}" />
+                            <input matInput placeholder="{{item.key}}" [(ngModel)]="searchObject[myselect.value]">
+                        </mat-form-field>
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,8 +37,10 @@
                 </mat-form-field>
             </div>
         </div>
-        <div *ngIf = "tableMetaData.exportEnabled" class="row py-1 m-1 text-elft d-block">
-            <button type="button" class="btn btn-primary" [innerHTML]="tableMetaData.serverPaginationEnabled ? 'Export Current Page' : 'Export Data'" (click)="export()">                            
+        <div *ngIf="tableMetaData.exportEnabled" class="row py-1 m-1 text-elft d-block">
+            <button type="button" class="btn btn-primary"
+                [innerHTML]="tableMetaData.serverPaginationEnabled ? 'Export Current Page' : 'Export Data'"
+                (click)="export()">
             </button>
         </div>
     </div>
@@ -79,7 +84,7 @@
     </div>
     <mat-paginator [length]="paginatedData?.totalElements" (page)="onPageChange($event)"
         [pageSizeOptions]="[5, 10, 20,50]" showFirstLastButtons aria-label="Select page of periodic elements">
-    </mat-paginator>    
+    </mat-paginator>
 
     <!-- Modal -->
     <div class="modal fade" id="createModal" #createModalRef tabindex="-1" role="dialog"
