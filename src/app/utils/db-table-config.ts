@@ -38,7 +38,7 @@ import { EMPTY } from 'rxjs';
                     column: ["apiStatus", "availableStatus"]
                 },
                 create: {
-                    enabled: false,
+                    enabled: true,
                     column: ["apiStatus", "availableStatus"]
                 }
             },
@@ -46,7 +46,7 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_supplier_master',
                 tableviewName: 'NCR SUPPLIER MASTER',
                 tableApiName: 'supplier-master',
-                serverPaginationEnabled: false,
+                serverPaginationEnabled: true,
                 exportEnabled: true,
                 edit: {
                     enabled: false,

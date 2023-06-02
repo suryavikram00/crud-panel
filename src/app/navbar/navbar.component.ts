@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../service/local-storage.service';
+import { LoadingService } from '../service/loading.service';
 
 @Component({
   selector: 'nms-navbar',
@@ -9,9 +10,14 @@ import { LocalStorageService } from '../service/local-storage.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private localStorageService: LocalStorageService, public router: Router) { 
-    
+  loading: boolean;
+
+  constructor(private localStorageService: LocalStorageService, public router: Router, private loadingService: LoadingService) { 
+    this.loadingService.loading$.subscribe((isLoading) => {
+      this.loading = isLoading;
+    });
   }
+  
 
 
   isUserLoggedIn(){

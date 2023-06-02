@@ -41,7 +41,7 @@
     </div>
 
     <div class="table-container">
-        <table mat-table [dataSource]="dataSource">
+        <table mat-table [dataSource]="dataSource" class="table-hover">
             <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
@@ -69,7 +69,7 @@
             </ng-container>
             <div *ngIf="tableMetaData?.edit?.enabled">
                 <tr mat-header-row *matHeaderRowDef="displayedColumns.concat('actions')"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns.concat('actions');"></tr>
+                <tr mat-row class="" *matRowDef="let row; columns: displayedColumns.concat('actions');"></tr>
             </div>
             <div *ngIf="!tableMetaData?.edit?.enabled">
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
