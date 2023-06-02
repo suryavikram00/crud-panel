@@ -15,7 +15,7 @@ import { EMPTY } from 'rxjs';
                 tableName: 'ncr_supplier_login_details',
                 tableviewName: 'NCR SUPPLIER LOGIN DETAILS',
                 tableApiName: 'supplier-login-detail',
-                serverPaginationEnabled: true,
+                serverPaginationEnabled: false,
                 searchColumn : [],
                 exportEnabled: true,
                 edit: {
