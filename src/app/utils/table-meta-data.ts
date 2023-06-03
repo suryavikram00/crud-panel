@@ -6,7 +6,8 @@ export interface TableMetaData {
     searchColumn : String[],
     exportEnabled: boolean,
     edit: ActionMetaData,
-    create: ActionMetaData
+    create: ActionMetaData,
+    accreditionEnabled:boolean
 }
 
 export interface ActionMetaData {

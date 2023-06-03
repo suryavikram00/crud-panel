@@ -27,8 +27,7 @@ export class ApiService {
                 map((res: any) => {
                     const resData: { error: any, data: any } = res;
                     if (res.status == 'FAILURE') {
-                        this.toastr.open('error', `Failure`, 'Something went wrong!');
-                        return throwError(res.status)
+                        this.toastr.open('error', `Failure`, 'Something went wrong!');                        
                     }
                     return resData;
                 }),
@@ -45,8 +44,7 @@ export class ApiService {
                 map((res: any) => {
                     const resData: { error: any, data: any } = res;
                     if (res.status == 'FAILURE') {
-                        this.toastr.open('error', `Failure`, 'Something went wrong!');
-                        return throwError(res.status)
+                        this.toastr.open('error', `Failure`, 'Something went wrong!');                        
                     }
                     return resData;
                 }),
@@ -106,6 +104,8 @@ export class ApiService {
                     if (res.status == 'FAILURE') {
                         this.toastr.open('error', `Failure`, res.message);
                         // return throwError(res.status)
+                    } else if (res.status == 'SUCCESS'){
+                        this.toastr.open('success', `SUCCESS`, res.message);
                     }
                     return resData;
                 }),
@@ -124,6 +124,8 @@ export class ApiService {
                     if (res.status == 'FAILURE') {
                         this.toastr.open('error', `Failure`, res.message);
                         return resData;
+                    } else if (res.status == 'SUCCESS'){
+                        this.toastr.open('success', `SUCCESS`, res.message);
                     }
                     return resData;
                 }),

@@ -39,7 +39,7 @@ export class GenericTableComponent {
     console.log(' in view ' + this.paginatedData);
   }
 
-  public loadDataSource() {    
+  public loadDataSource() {
     this.loadTableHeader();
     this.loadTableData();
     this.loadTablePaginator();
@@ -198,6 +198,34 @@ export class GenericTableComponent {
 
   saveChanges(record: any): void {
     console.log(record);
+    if (this.tableMetaData.accreditionEnabled) {
+      this.submitForAccredtion(record);
+    } else {
+      this.updateRecord(record);
+    }
+
+  }
+
+  private submitForAccredtion(record: any) {
+    let tableMetaData: TableMetaData = this.dbTableConfig.getTableMetaDataByApi('acc-request');
+    const originalRecord = this.paginatedData.content.find(item => item.id === record.id);
+    let accRequest = {
+      "tag": this.tableMetaData.tableName,
+      "uniqueIdentifier": record.id,
+      "newValue": JSON.stringify(record),
+      "existingValue": JSON.stringify(originalRecord)
+    };
+    this.api.httpPost("/" + tableMetaData.tableApiName, accRequest).subscribe((data: any) => {
+      console.log(data);
+      if (data.status === 'FAILURE') {
+        record.editMode = true;
+      } else {
+        record.editMode = false;
+      }
+    });
+  }
+
+  private updateRecord(record: any) {
     // Perform the save operation
     this.api.httpPut("/" + this.tableMetaData.tableApiName, record).subscribe((data: any) => {
       console.log(data);
@@ -207,6 +235,7 @@ export class GenericTableComponent {
         record.editMode = false;
       }
     });
+
   }
 
   createBtnClick(): void {
@@ -266,7 +295,7 @@ export class GenericTableComponent {
     return key !== 'editMode' && this.tableMetaData.create.column.includes(key);
   }
 
-  public canShowSearchField(key : any) : boolean {
+  public canShowSearchField(key: any): boolean {
     return this.tableMetaData.searchColumn.includes(key);
   }
 

@@ -18,6 +18,7 @@ import { EMPTY } from 'rxjs';
                 serverPaginationEnabled: false,
                 searchColumn : [],
                 exportEnabled: true,
+                accreditionEnabled : true,
                 edit: {
                     enabled: true,
                     column: ["fcCode", "accessToken", "userId"]
@@ -35,8 +36,9 @@ import { EMPTY } from 'rxjs';
                 serverPaginationEnabled: true,
                 searchColumn : [],
                 exportEnabled: true,
+                accreditionEnabled : false,
                 edit: {
-                    enabled: false,
+                    enabled: true,
                     column: ["apiStatus", "availableStatus"]
                 },
                 create: {
@@ -51,6 +53,7 @@ import { EMPTY } from 'rxjs';
                 serverPaginationEnabled: true,
                 searchColumn : ["active", "autoSendEmail", "autoEmailOtcGeneratePo", "autoPo", "emailId", "name", "supplierCode"],
                 exportEnabled: true,
+                accreditionEnabled : false,
                 edit: {
                     enabled: false,
                     column: []
@@ -67,6 +70,7 @@ import { EMPTY } from 'rxjs';
                 serverPaginationEnabled: false,
                 searchColumn : [],
                 exportEnabled: true,
+                accreditionEnabled : false,
                 edit: {
                     enabled: false,
                     column: []
@@ -75,7 +79,42 @@ import { EMPTY } from 'rxjs';
                     enabled: false,
                     column: []
                 }
+            },
+            {
+                tableName: 'acc_request',
+                tableviewName: 'ACCREDENTIAL REQUEST',
+                tableApiName: 'acc-request',
+                serverPaginationEnabled: false,
+                searchColumn : [],
+                exportEnabled: true,
+                accreditionEnabled : false,
+                edit: {
+                    enabled: true,
+                    column: ["status"]
+                },
+                create: {
+                    enabled: false,
+                    column: []
+                }
+            },
+            {
+                tableName: 'acc_request_detail',
+                tableviewName: 'ACCREDENTIAL REQUEST_DETAIL',
+                tableApiName: 'acc-request-detail',
+                serverPaginationEnabled: false,
+                searchColumn : ["id","requestId", "status"],
+                exportEnabled: true,
+                accreditionEnabled : false,
+                edit: {
+                    enabled: true,
+                    column: ["status"]
+                },
+                create: {
+                    enabled: false,
+                    column: []
+                }
             }
+
         ];
     }
 

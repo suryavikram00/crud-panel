@@ -13,7 +13,7 @@
         </div>
         <div class="row pt-3 m-1">
             <div *ngFor="let item of searchObject | keyvalue  let index = index; trackBy: trackByFn">
-                <div *ngIf = "tableMetaData.searchColumn.length == 0 || canShowSearchField(item.key)">
+                <div *ngIf="tableMetaData.searchColumn.length == 0 || canShowSearchField(item.key)">
                     <!-- <div *ngIf = "tableMetaData.edit.column.includes(column)"></div> -->
                     <div class="col"><b>{{item.key}}</b></div>
                     <div class="col">
@@ -67,7 +67,11 @@
                         <button class="btn btn-primary" (click)="toggleEdit(element)">edit</button>
                     </ng-container>
                     <ng-template #editButtons>
-                        <button class="btn btn-success mx-1" (click)="saveChanges(element)">save</button>
+                        <button class="btn btn-success mx-1" (click)="saveChanges(element)">
+                            <ng-container
+                                *ngIf="tableMetaData.accreditionEnabled; else updateText">Submit</ng-container>
+                            <ng-template #updateText>Update</ng-template>
+                        </button>
                         <button class="btn btn-warning" (click)="cancelEdit(element)">cancel</button>
                     </ng-template>
                 </td>
