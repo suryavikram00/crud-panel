@@ -90,12 +90,12 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'acc-request',
                 serverPaginationEnabled: false,
                 searchColumn : [],
-                tableColumn : [],
+                tableColumn : ["action", "id", "status", "submittedBy", "submittedOn", "tag", "uniqueIdentifier"],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {
                     enabled: true,
-                    column: ["status"]
+                    column: []
                 },
                 create: {
                     enabled: false,
@@ -108,12 +108,12 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'acc-request-detail',
                 serverPaginationEnabled: false,
                 searchColumn : ["accreditGroupLevel", "action", "approverEmail", "requestId", "status", "tag", "uniqueIdentifier"],
-                tableColumn : [],
+                tableColumn : ["accreditGroupLevel", "action", "approverEmail", "requestId", "status", "tag", "uniqueIdentifier"],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {
                     enabled: true,
-                    column: ["status"]
+                    column: []
                 },
                 create: {
                     enabled: false,
@@ -134,6 +134,17 @@ import { EMPTY } from 'rxjs';
         let selectedTableMetaData: TableMetaData = this.tableMetaDataArray[0];
         for (let i = 0; i < this.tableMetaDataArray.length; i++) {
             if (this.tableMetaDataArray[i].tableApiName == apiName) {
+                selectedTableMetaData = this.tableMetaDataArray[i];
+            }
+        }
+        return Object.assign({}, selectedTableMetaData);
+    }
+
+    public getTableMetaDataByTableName(tableName: string): TableMetaData {
+        // this needs to be looked again #revisit
+        let selectedTableMetaData: TableMetaData = this.tableMetaDataArray[0];
+        for (let i = 0; i < this.tableMetaDataArray.length; i++) {
+            if (this.tableMetaDataArray[i].tableApiName == tableName) {
                 selectedTableMetaData = this.tableMetaDataArray[i];
             }
         }

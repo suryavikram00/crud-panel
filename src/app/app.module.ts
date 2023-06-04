@@ -32,7 +32,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { JsonDiffModalComponent } from './json-diff-modal/json-diff-modal.component';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { JsonBeautifyPipe } from './utils/json-beautify-pipe';
+import { SafeHtmlPipe } from './utils/safe-html-pipe';
 
 
 @NgModule({
@@ -48,7 +49,9 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     NavbarComponent,
     HealthCheckComponent,
     LoginComponent,
-    JsonDiffModalComponent
+    JsonDiffModalComponent,
+    JsonBeautifyPipe,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule,
@@ -76,8 +79,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     MatCheckboxModule,
     MatTooltipModule,
     MatDialogModule,
-    MatSelectModule,
-    NgxJsonViewerModule
+    MatSelectModule
   ], providers: [
     {
       provide: HTTP_INTERCEPTORS,

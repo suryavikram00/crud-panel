@@ -13,14 +13,16 @@
                 <th><h5>New Value</h5></th>
             </tr>
             <tr>
-                <!-- <td><pre>{{ existingValue | json }}</pre></td>
-                <td><pre>{{ newValue | json }}</pre></td> -->
-                <td><ngx-json-viewer [json]="existingValue"></ngx-json-viewer></td>
-                <td><ngx-json-viewer [json]="newValue"></ngx-json-viewer></td>
+                <td><pre>{{ record.existingValue | jsonBeautify }}</pre></td>
+                <td><pre [innerHTML]="getHighlightedDiff(record.newValue, record.existingValue) | safeHtml"></pre></td>
+                <!-- <td><pre [innerHTML]="removedValue | safeHtml"></pre></td> -->
+                
             </tr>
         </table>
     </div>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+<div class="modal-footer justify-content-center" 
+ *ngIf="tableMetaData?.tableName === 'acc_request_detail' && record?.status === 'PENDING'">
+    <button type="button" class="btn btn-success" (click)="diffModalBtnClick('APPROVED')">Approve</button>
+    <button type="button" class="btn btn-danger" (click)="diffModalBtnClick('REJECTED')">Reject</button>
 </div>

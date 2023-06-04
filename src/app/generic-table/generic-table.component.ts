@@ -43,6 +43,11 @@ export class GenericTableComponent {
   paginator!: MatPaginator;
 
 
+  constructor(private modalService: NgbModal,
+    private api: ApiService,
+    private dbTableConfig: DbTableConfig) {
+
+  }
 
   ngAfterViewInit() {
     console.log(' in view ' + this.paginatedData);
@@ -162,13 +167,6 @@ export class GenericTableComponent {
 
   url: string = "/";
 
-
-  constructor(private modalService: NgbModal,
-    private api: ApiService,
-    private dbTableConfig: DbTableConfig) {
-
-  }
-
   private getData(pageNumber: number, pageSize: number) {
     this.currentPageNo = pageNumber;
     this.currentPageSize = pageSize;
@@ -215,16 +213,25 @@ export class GenericTableComponent {
   saveChanges(record: any): void {
     console.log(record);
     if (this.tableMetaData.accreditionEnabled) {
-      this.submitForAccredtion(record);
+      this.submitForAccredtion(record, (data: any) => {
+        if (data.status === 'FAILURE') {
+          record.editMode = true;
+        } else {
+          record.editMode = false;
+        }
+      });
     } else {
       this.updateRecord(record);
     }
 
   }
 
-  private submitForAccredtion(record: any) {
+  private submitForAccredtion(record: any, callback: (data: any) => void) {
+
     let tableMetaData: TableMetaData = this.dbTableConfig.getTableMetaDataByApi('acc-request');
     const originalRecord = this.paginatedData.content.find(item => item.id === record.id);
+    delete record.editMode;
+    delete originalRecord.editMode;
     let accRequest = {
       "tag": this.tableMetaData.tableName,
       "uniqueIdentifier": record.id,
@@ -234,10 +241,9 @@ export class GenericTableComponent {
     };
     this.api.httpPost("/" + tableMetaData.tableApiName, accRequest).subscribe((data: any) => {
       console.log(data);
-      if (data.status === 'FAILURE') {
-        record.editMode = true;
-      } else {
-        record.editMode = false;
+      // Call the callback function
+      if (typeof callback === 'function') {
+        callback(data);
       }
     });
   }
@@ -284,9 +290,6 @@ export class GenericTableComponent {
       }
       this.closeModal();
     });
-    // } else {
-    // alert('Please enter values in all the fields!');
-    // }
   }
 
   cancelEdit(record: any): void {
@@ -323,13 +326,13 @@ export class GenericTableComponent {
   diffBtnClick(row: any) {
     const modalOptions = {
       centered: true,
-      // backdrop: 'static',
-      keyboard: false
+      backdrop: true,
+      keyboard: false,
+      size: 'lg'
     };
-
     this.modalRef = this.modalService.open(JsonDiffModalComponent, modalOptions);
-    this.modalRef.componentInstance.newValue = row.newValue;
-    this.modalRef.componentInstance.existingValue = row.existingValue;
+    this.modalRef.componentInstance.record = row;
+    this.modalRef.componentInstance.tableMetaData = this.tableMetaData;
   }
 
 }
