@@ -31,6 +31,8 @@ import { GenericTableComponent } from './generic-table/generic-table.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { JsonDiffModalComponent } from './json-diff-modal/json-diff-modal.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 
 @NgModule({
@@ -45,7 +47,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     AppComponent,
     NavbarComponent,
     HealthCheckComponent,
-    LoginComponent
+    LoginComponent,
+    JsonDiffModalComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +76,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatCheckboxModule,
     MatTooltipModule,
     MatDialogModule,
-    MatSelectModule
+    MatSelectModule,
+    NgxJsonViewerModule
   ], providers: [
     {
       provide: HTTP_INTERCEPTORS,

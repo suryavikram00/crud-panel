@@ -17,6 +17,7 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'supplier-login-detail',
                 serverPaginationEnabled: false,
                 searchColumn : [],
+                tableColumn : [],
                 exportEnabled: true,
                 accreditionEnabled : true,
                 edit: {
@@ -35,6 +36,7 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'zipcode',
                 serverPaginationEnabled: true,
                 searchColumn : [],
+                tableColumn : [],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {
@@ -52,6 +54,7 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'supplier-master',
                 serverPaginationEnabled: true,
                 searchColumn : ["active", "autoSendEmail", "autoEmailOtcGeneratePo", "autoPo", "emailId", "name", "supplierCode"],
+                tableColumn : [],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {
@@ -69,6 +72,7 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'fc-master',
                 serverPaginationEnabled: false,
                 searchColumn : [],
+                tableColumn : [],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {
@@ -86,6 +90,7 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'acc-request',
                 serverPaginationEnabled: false,
                 searchColumn : [],
+                tableColumn : [],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {
@@ -102,7 +107,8 @@ import { EMPTY } from 'rxjs';
                 tableviewName: 'ACCREDENTIAL REQUEST_DETAIL',
                 tableApiName: 'acc-request-detail',
                 serverPaginationEnabled: false,
-                searchColumn : ["id","requestId", "status"],
+                searchColumn : ["accreditGroupLevel", "action", "approverEmail", "requestId", "status", "tag", "uniqueIdentifier"],
+                tableColumn : [],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {
