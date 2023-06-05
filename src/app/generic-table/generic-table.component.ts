@@ -332,7 +332,7 @@ export class GenericTableComponent {
       centered: true,
       backdrop: true,
       keyboard: false,
-      size: 'xl'
+      size: 'lg'
     };
     this.modalRef = this.modalService.open(JsonDiffModalComponent, modalOptions);
     this.modalRef.componentInstance.record = row;
