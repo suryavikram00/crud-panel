@@ -13,8 +13,7 @@
         </div>
         <div class="row pt-3 m-1">
             <div *ngFor="let item of searchObject | keyvalue  let index = index; trackBy: trackByFn">
-                <div *ngIf = "tableMetaData.searchColumn.length == 0 || canShowSearchField(item.key)">
-                    <!-- <div *ngIf = "tableMetaData.edit.column.includes(column)"></div> -->
+                <div *ngIf="tableMetaData.searchColumn.length == 0 || canShowSearchField(item.key)">                    
                     <div class="col"><b>{{item.key}}</b></div>
                     <div class="col">
                         <mat-form-field>
@@ -51,25 +50,40 @@
         The actual rendered columns are set as a property on the row definition" -->
 
             <ng-container *ngFor='let column of displayedColumns;' matColumnDef='{{column}}'>
-                <th mat-header-cell *matHeaderCellDef class="table-header"> {{column | uppercase}}</th>
-                <td mat-cell *matCellDef="let element" class="">
-                    <span *ngIf="!element.editMode || !tableMetaData.edit.column.includes(column)">{{ element[column]
-                        | json }}</span>
-                    <input *ngIf="element.editMode && tableMetaData.edit.column.includes(column)"
-                        [(ngModel)]="element[column]" class="form-control">
-                </td>
+                <!-- <div *ngIf="tableMetaData.tableColumn.length == 0 || canShowTableField(column)"> -->
+                    <th mat-header-cell *matHeaderCellDef class="table-header"> {{column | uppercase}}</th>
+                    <td mat-cell *matCellDef="let element" class="">
+                        <span *ngIf="!element.editMode || !tableMetaData.edit.column.includes(column)">{{
+                            element[column]
+                            | json }}</span>
+                        <input *ngIf="element.editMode && tableMetaData.edit.column.includes(column)"
+                            [(ngModel)]="element[column]" class="form-control">
+                    </td>
+                <!-- </div> -->
             </ng-container>
             <!-- Add a new column for the Edit button -->
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef class="table-header">Actions</th>
                 <td mat-cell *matCellDef="let element">
-                    <ng-container *ngIf="!element.editMode; else editButtons">
-                        <button class="btn btn-primary" (click)="toggleEdit(element)">edit</button>
-                    </ng-container>
+                    <ng-container *ngIf="tableMetaData?.tableName !== 'acc_request'
+                    && tableMetaData?.tableName !== 'acc_request_detail'">
+                        <ng-container *ngIf="!element.editMode; else editButtons">
+                            <button class="btn btn-primary mx-1" (click)="toggleEdit(element)">edit</button>
+                        </ng-container>
+                    </ng-container>                    
                     <ng-template #editButtons>
-                        <button class="btn btn-success mx-1" (click)="saveChanges(element)">save</button>
+                        <button class="btn btn-success mx-1" (click)="saveChanges(element)">
+                            <ng-container
+                                *ngIf="tableMetaData.accreditionEnabled; else updateText">Submit</ng-container>
+                            <ng-template #updateText>Update</ng-template>
+                        </button>
                         <button class="btn btn-warning" (click)="cancelEdit(element)">cancel</button>
                     </ng-template>
+                    <ng-container *ngIf="tableMetaData?.tableName === 'acc_request'
+                                        || tableMetaData?.tableName === 'acc_request_detail'">
+                        <button class="btn btn-primary" (click)="diffBtnClick(element)">Show Diff</button>
+                    </ng-container>    
+
                 </td>
             </ng-container>
             <div *ngIf="tableMetaData?.edit?.enabled">

@@ -5,10 +5,13 @@ import { saveAs } from 'file-saver';
 import 'datatables.net';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ToastrService } from '../service/toastr.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PaginatedData } from '../utils/PaginatedData';
 import { TableMetaData } from '../utils/table-meta-data';
 import { DbTableConfig } from '../utils/db-table-config';
+import { JsonDiffModalComponent } from '../json-diff-modal/json-diff-modal.component';
+
+
 
 
 @Component({
@@ -20,6 +23,9 @@ export class GenericTableComponent {
 
   @ViewChild('closebutton') closebutton: any;
 
+  modalRef: NgbModalRef | undefined; // Modal reference
+
+
   paginatedData!: PaginatedData<any>;
   tableMetaData!: TableMetaData;
 
@@ -27,6 +33,7 @@ export class GenericTableComponent {
   createObject: any;
   dataSource!: MatTableDataSource<any>;
   displayedColumns: string[] = [];
+  contentColumn: string[] = [];
   currentPageNo: number = 0;
   currentPageSize: number = 5;
   loadContentUsingFilter: boolean = false;
@@ -35,11 +42,18 @@ export class GenericTableComponent {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
+
+  constructor(private modalService: NgbModal,
+    private api: ApiService,
+    private dbTableConfig: DbTableConfig) {
+
+  }
+
   ngAfterViewInit() {
     console.log(' in view ' + this.paginatedData);
   }
 
-  public loadDataSource() {    
+  public loadDataSource() {
     this.loadTableHeader();
     this.loadTableData();
     this.loadTablePaginator();
@@ -52,16 +66,20 @@ export class GenericTableComponent {
       return;
     }
     this.displayedColumns = [];
-    this.displayedColumns = Object.keys(this.paginatedData.content[0]);
+    this.displayedColumns = this.tableMetaData.tableColumn.length > 0 ? Object.keys(this.paginatedData.content[0])
+      .filter(key => this.tableMetaData.tableColumn.includes(key))
+      : Object.keys(this.paginatedData.content[0]);
 
     console.log('columns :: ' + this.displayedColumns);
     if (!this.loadContentUsingFilter) {
       this.searchObject = Object.assign({}, this.paginatedData.content[0]);
       this.createObject = Object.assign({}, this.paginatedData.content[0]);
       // initialize the search object values to empty
-      for (let index = 0; index < this.displayedColumns.length; index++) {
-        this.searchObject[this.displayedColumns[index]] = "";
-        this.createObject[this.displayedColumns[index]] = "";
+      console.log('length => ' + Object.keys(this.paginatedData.content[0]).length);
+      this.contentColumn = Object.keys(this.paginatedData.content[0]);
+      for (let index = 0; index < this.contentColumn.length; index++) {
+        this.searchObject[this.contentColumn[index]] = "";
+        this.createObject[this.contentColumn[index]] = "";
       }
     }
   }
@@ -135,7 +153,7 @@ export class GenericTableComponent {
 
   private loadTablePaginator() {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.paginator.pageIndex = 0;
+    this.dataSource.paginator.pageIndex = this.currentPageNo != 0 ? this.currentPageNo : 0;
   }
 
   private loadTableData() {
@@ -148,10 +166,6 @@ export class GenericTableComponent {
   }
 
   url: string = "/";
-
-  constructor(private api: ApiService, private dbTableConfig: DbTableConfig) {
-
-  }
 
   private getData(pageNumber: number, pageSize: number) {
     this.currentPageNo = pageNumber;
@@ -183,6 +197,9 @@ export class GenericTableComponent {
           this.paginatedData = data.pageData;
           this.loadTableData();
         });
+    } else {
+      this.currentPageNo = event.pageIndex;
+      this.currentPageSize = event.pageSize;
     }
 
 
@@ -198,6 +215,44 @@ export class GenericTableComponent {
 
   saveChanges(record: any): void {
     console.log(record);
+    if (this.tableMetaData.accreditionEnabled) {
+      this.submitForAccredtion(record, (data: any) => {
+        if (data.status === 'FAILURE') {
+          record.editMode = true;
+        } else {
+          record.editMode = false;
+          this.loadDataSource();
+        }
+      });
+    } else {
+      this.updateRecord(record);
+    }
+
+  }
+
+  private submitForAccredtion(record: any, callback: (data: any) => void) {
+
+    let tableMetaData: TableMetaData = this.dbTableConfig.getTableMetaDataByApi('acc-request');
+    const originalRecord = this.paginatedData.content.find(item => item.id === record.id);
+    delete record.editMode;
+    delete originalRecord.editMode;
+    let accRequest = {
+      "tag": this.tableMetaData.tableName,
+      "uniqueIdentifier": record.id,
+      "newValue": JSON.stringify(record),
+      "existingValue": JSON.stringify(originalRecord),
+      "requestStatus": record.requestStatus
+    };
+    this.api.httpPost("/" + tableMetaData.tableApiName, accRequest).subscribe((data: any) => {
+      console.log(data);
+      // Call the callback function
+      if (typeof callback === 'function') {
+        callback(data);
+      }
+    });
+  }
+
+  private updateRecord(record: any) {
     // Perform the save operation
     this.api.httpPut("/" + this.tableMetaData.tableApiName, record).subscribe((data: any) => {
       console.log(data);
@@ -207,6 +262,7 @@ export class GenericTableComponent {
         record.editMode = false;
       }
     });
+
   }
 
   createBtnClick(): void {
@@ -238,9 +294,6 @@ export class GenericTableComponent {
       }
       this.closeModal();
     });
-    // } else {
-    // alert('Please enter values in all the fields!');
-    // }
   }
 
   cancelEdit(record: any): void {
@@ -257,8 +310,8 @@ export class GenericTableComponent {
   openCreateModalBtnClick(): void {
     this.createObject = Object.assign({}, this.paginatedData.content[0]);
     // initialize the search object values to empty
-    for (let index = 0; index < this.displayedColumns.length; index++) {
-      this.createObject[this.displayedColumns[index]] = "";
+    for (let index = 0; index < this.contentColumn.length; index++) {
+      this.createObject[this.contentColumn[index]] = "";
     }
   }
 
@@ -266,10 +319,24 @@ export class GenericTableComponent {
     return key !== 'editMode' && this.tableMetaData.create.column.includes(key);
   }
 
-  public canShowSearchField(key : any) : boolean {
+  public canShowSearchField(key: any): boolean {
     return this.tableMetaData.searchColumn.includes(key);
   }
 
+  public canShowTableField(key: any): boolean {
+    return this.tableMetaData.tableColumn.includes(key);
+  }
 
+  diffBtnClick(row: any) {
+    const modalOptions = {
+      centered: true,
+      backdrop: true,
+      keyboard: false,
+      size: 'lg'
+    };
+    this.modalRef = this.modalService.open(JsonDiffModalComponent, modalOptions);
+    this.modalRef.componentInstance.record = row;
+    this.modalRef.componentInstance.tableMetaData = this.tableMetaData;
+  }
 
 }

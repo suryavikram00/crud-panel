@@ -1,0 +1,40 @@
+<!-- diff-modal.component.html -->
+<div class="modal-header">
+    <h4 class="modal-title">Request Diff</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>
+                    <h5>Existing Value</h5>
+                </th>
+                <th>
+                    <h5>New Value</h5>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <pre>{{ record.existingValue | jsonBeautify }}</pre>
+                </td>
+                <td>
+                    <pre [innerHTML]="getHighlightedDiff(record.newValue, record.existingValue) | safeHtml"></pre>
+                </td>
+                <!-- <td><pre [innerHTML]="removedValue | safeHtml"></pre></td> -->
+
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="modal-footer justify-content-center">
+    <ng-container *ngIf="tableMetaData?.tableName === 'acc_request_detail' && record?.status === 'PENDING'">
+        <button type="button" class="btn btn-success" (click)="diffModalBtnClick('APPROVED')">Approve</button>
+        <button type="button" class="btn btn-danger" (click)="diffModalBtnClick('REJECTED')">Reject</button>
+    </ng-container>
+    <ng-container *ngIf="tableMetaData?.tableName === 'acc_request' && record?.status === 'PENDING'">
+        <button type="button" class="btn btn-warning" (click)="diffModalBtnClick('CANCELLED')">Cancel Request</button>        
+    </ng-container>
+</div>

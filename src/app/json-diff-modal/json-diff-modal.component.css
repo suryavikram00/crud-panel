@@ -1,0 +1,11 @@
+.table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  

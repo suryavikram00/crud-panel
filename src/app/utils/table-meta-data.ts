@@ -4,9 +4,11 @@ export interface TableMetaData {
     tableApiName: string;
     serverPaginationEnabled: boolean;
     searchColumn : String[],
+    tableColumn : String[],
     exportEnabled: boolean,
     edit: ActionMetaData,
-    create: ActionMetaData
+    create: ActionMetaData,
+    accreditionEnabled:boolean
 }
 
 export interface ActionMetaData {
