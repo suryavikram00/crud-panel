@@ -95,7 +95,7 @@ import { EMPTY } from 'rxjs';
                 accreditionEnabled : false,
                 edit: {
                     enabled: true,
-                    column: []
+                    column: ["status"]
                 },
                 create: {
                     enabled: false,
@@ -108,7 +108,7 @@ import { EMPTY } from 'rxjs';
                 tableApiName: 'acc-request-detail',
                 serverPaginationEnabled: false,
                 searchColumn : ["accreditGroupLevel", "action", "approverEmail", "requestId", "status", "tag", "uniqueIdentifier"],
-                tableColumn : ["accreditGroupLevel", "action", "approverEmail", "requestId", "status", "tag", "uniqueIdentifier"],
+                tableColumn : ["id","accreditGroupLevel", "action", "approverEmail", "requestId", "status", "tag", "uniqueIdentifier", "requestStatus"],
                 exportEnabled: true,
                 accreditionEnabled : false,
                 edit: {

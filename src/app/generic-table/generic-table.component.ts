@@ -153,7 +153,7 @@ export class GenericTableComponent {
 
   private loadTablePaginator() {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.paginator.pageIndex = 0;
+    this.dataSource.paginator.pageIndex = this.currentPageNo != 0 ? this.currentPageNo : 0;
   }
 
   private loadTableData() {
@@ -197,6 +197,9 @@ export class GenericTableComponent {
           this.paginatedData = data.pageData;
           this.loadTableData();
         });
+    } else {
+      this.currentPageNo = event.pageIndex;
+      this.currentPageSize = event.pageSize;
     }
 
 
@@ -218,6 +221,7 @@ export class GenericTableComponent {
           record.editMode = true;
         } else {
           record.editMode = false;
+          this.loadDataSource();
         }
       });
     } else {
@@ -328,7 +332,7 @@ export class GenericTableComponent {
       centered: true,
       backdrop: true,
       keyboard: false,
-      size: 'lg'
+      size: 'xl'
     };
     this.modalRef = this.modalService.open(JsonDiffModalComponent, modalOptions);
     this.modalRef.componentInstance.record = row;
