@@ -55,7 +55,7 @@
                     <td mat-cell *matCellDef="let element" class="">
                         <span *ngIf="!element.editMode || !tableMetaData.edit.column.includes(column)">{{
                             element[column]
-                            | json }}</span>
+                            | jsonBeautify }}</span>
                         <input *ngIf="element.editMode && tableMetaData.edit.column.includes(column)"
                             [(ngModel)]="element[column]" class="form-control">
                     </td>

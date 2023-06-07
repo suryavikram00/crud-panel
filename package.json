@@ -23,6 +23,7 @@
     "@angular/router": "~12.2.0",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
     "bootstrap": "^4.6.2",
+    "bootstrap-icons": "^1.10.5",
     "datatables.net": "^1.13.4",
     "datatables.net-dt": "^1.13.4",
     "diff-match-patch": "^1.0.5",

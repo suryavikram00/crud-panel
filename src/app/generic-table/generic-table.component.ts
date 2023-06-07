@@ -50,7 +50,7 @@ export class GenericTableComponent {
   }
 
   ngAfterViewInit() {
-    console.log(' in view ' + this.paginatedData);
+    console.log(' in view ' + this.paginatedData);   
   }
 
   public loadDataSource() {

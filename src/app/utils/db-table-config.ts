@@ -89,7 +89,7 @@ import { EMPTY } from 'rxjs';
                 tableviewName: 'ACCREDENTIAL REQUEST',
                 tableApiName: 'acc-request',
                 serverPaginationEnabled: false,
-                searchColumn : [],
+                searchColumn : ['action', 'id', 'status', 'submittedBy', 'submittedOn', 'tag', 'uniqueIdentifier'],
                 tableColumn : ["action", "id", "status", "submittedBy", "submittedOn", "tag", "uniqueIdentifier"],
                 exportEnabled: true,
                 accreditionEnabled : false,
